@@ -12,7 +12,7 @@
             <Tabla/>
         </div>
         <div v-if="tokenStore.ventana == 2" class="contenido">
-            Usuarios
+            <Usuarios/>
         </div>
         <div v-if="tokenStore.ventana == 3" class="contenido">
             <AsignarMaterias/>
@@ -26,6 +26,7 @@ import { ref, reactive } from 'vue';
 import Tabla from '@/components/Materias.vue';
 import AsignarMaterias from '@/components/AsignarMaterias.vue';
 import { useTokenStore } from '@/stores/userStore.js';
+import Usuarios from '@/components/Usuarios.vue';
 const tokenStore = useTokenStore();
 
 const opcion=((valor) => {
