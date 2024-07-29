@@ -1,31 +1,27 @@
 <template>
   <div class="modal-mask">
-    <h2>Asignar Materias a Usuario</h2>
-    <div>
-      <form @submit.prevent="enviar()" >
+    <div class="modal-container">
+      <button @click="cerrar()" class="cerrar">X</button>
+      <h2>Asignar Materias</h2>
+      <form @submit.prevent="enviar()" class="formulario">
         <input v-model="user.cedula" name="cedula" type="number" placeholder="Cedula" class="form-control" />
-        <button class="boton">
+        <button v-if="!mostrar" class="boton">
           <span>Buscar</span>
         </button>
       </Form>
-      <div v-if="mostrar">
-          {{datos.nombre}}
-          {{datos.apellido}}
-          {{datos.email}}
-          <div>
-            <select v-model="selected">
-                <!-- <option v-for="option in options" :value="option.value" >
-                    {{ option.text }}
-                </option> -->
-                <option v-for="materia in materias" :value="materia._id">
-                    {{ materia.nombre }}
-                </option>
-            </select>
-            <div>Selected: {{ selected }}</div>
-            <span @click="registrar()" class="icono">
-              📋
-            </span>
-          </div>
+      <div v-if="mostrar" class="datosusuario">
+        <input disabled="true" type="text" v-model="datos.nombre" class="form-control">
+        <input disabled="true" type="text" v-model="datos.apellido" class="form-control">
+      </div>
+      <div v-if="mostrar" class="form-control">
+        <select v-model="selected" class="form-control">
+          <option v-for="materia in materias" :value="materia._id">
+            {{ materia.nombre }}
+          </option>
+        </select>
+        <button @click="registrar()" class="boton">
+          <span>Guardar</span>
+        </button>
       </div>
     </div>
   </div>
@@ -34,18 +30,24 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
 import axiosInstance from '../plugins/axios.js';
-const materias = ref ([]);
+import { useRoute, useRouter } from "vue-router";
+const { params } = useRoute();
+import { useTokenStore } from '@/stores/userStore.js';
+const tokenStore = useTokenStore();
+
+const router = useRouter();
+const materias = ref([]);
 const selected = ref(1);
 const API = 'http://localhost:4000';
 
 onMounted(async () => {
   const data1 = await fetch(`${API}/api/materias`);
   materias.value = await data1.json();
-  console.log("MATERIAS TRAIDAS: ",materias.value);
+  console.log("MATERIAS TRAIDAS: ", materias.value);
 });
 
 const user = reactive({
-  "cedula": 30475562
+  "cedula": ''
 });
 
 const mostrar = ref(false);
@@ -53,22 +55,19 @@ const mostrar = ref(false);
 const datos = reactive({
   "nombre": "",
   "apellido": "",
-  "email" : ""
 });
 
 
 async function enviar() {
   try {
-    const{ data } = await axiosInstance.post('/users/buscar', user);
-    if (data){
-      mostrar.value=true;
+    const { data } = await axiosInstance.post('/users/buscar', user);
+    if (data) {
+      mostrar.value = true;
       console.log("usuario logueado: ", data);
-      datos.id =data._id;
+      datos.id = data._id;
       datos.nombre = data.name;
-      datos.apellido = data.apellido;
-      datos.email = data.email;
+      datos.apellido = data.lastname;
     }
-    //router.push({ name: "dashboard" });
     return;
   } catch (error) {
     console.log(error);
@@ -89,31 +88,16 @@ const options = ref([
   { text: 'TRIMESTRE 10', value: 10 }
 ]);
 
-async function cargar() {
-  try {
-    const{ data1 } = await axiosInstance.get('/materias/');
-    if (data1){
-      mostrar.value=true;
-      console.log("Dataaaaa: ", data1);
-    }
-    //router.push({ name: "dashboard" });
-    return;
-  } catch (error) {
-    console.log(error);
-    return;
-  }
-}
 
 const registrar = async () => {
-  console.log("Usuario.:",datos.nombre , "id.:", datos.id);
-  console.log("Materias.:", selected.value, "id.:",selected._id);
   const newmatuser = reactive({
-   "iduser": datos.id,
-   "idmat": selected.value
- });
-  //router.push({ name: "editarmateria", params:{id:_id, trimestre: trimestre, nombre: nombre }});
+    "iduser": datos.id,
+    "idmat": selected.value
+  });
   try {
-    const {data2} = await axiosInstance.post('/matuser/',newmatuser);
+    const { data2 } = await axiosInstance.post('/matuser/', newmatuser);
+    tokenStore.ventana = 0;
+    router.push({ name: "dashboard" });
     return;
   } catch (error) {
     console.log(error);
@@ -121,9 +105,12 @@ const registrar = async () => {
   }
 }
 
+const cerrar = (() => {
+  tokenStore.ventana = 0;
+  router.push({ name: "dashboard" });
+})
 
 </script>
-
 
 
 <style scoped>
@@ -135,20 +122,22 @@ const registrar = async () => {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(184, 181, 181, 0.5);
-
-  /* background-image: url("../assets/Background.png"); */
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: cover;
-  overflow: hidden;
-
   display: flex;
   transition: opacity 0.3s ease;
 }
 
+.cerrar {
+  margin-left: 90%;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 50%;
+}
+
+
 .modal-container {
-  width: 300px;
+  width: 400px;
   margin: auto;
   padding: 35px 15px;
   background-color: #80B3FF;
@@ -162,7 +151,7 @@ const registrar = async () => {
 }
 
 h2 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: bold;
 }
 
@@ -171,13 +160,21 @@ h2 {
   flex-direction: column;
   width: 100%;
   gap: 20px;
-
 }
 
 .form-control {
   padding: 12px;
   border: none;
   border-radius: 15px;
+  text-align: center;
+}
+
+.datosusuario {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  gap: 10px;
+  width: 100%;
 }
 
 input::placeholder {
