@@ -20,7 +20,7 @@
                     <td>{{ usuario.email }}</td>
                     <td>{{ usuario.rol }}</td>
                     <td>
-                        <span @click="editar()" class="icono">
+                        <span @click="editar(usuario)" class="icono">
                             📋
                         </span>
                         <span @click="eliminar(usuario)" class="icono">
@@ -58,10 +58,8 @@ const agregar = () => {
 }
 
 
-const editar = () => {
-    //console.log("Trimestre...:",trimestre);
-    //router.push(`editarmateria/${_id}`)
-    //router.push({ name: "editarmateria", params:{id:_id, trimestre: trimestre, nombre: nombre }});
+const editar = ({_id}) => {
+    router.push({ name: "editarusuario", params:{id:_id}});
 }
 
 

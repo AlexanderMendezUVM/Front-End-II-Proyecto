@@ -31,13 +31,19 @@ const router = createRouter({
       meta: {keyAuth: true}
     },
     {
+      path: '/editarusuario/:id',
+      name: 'editarusuario',
+      component: () => import('../components/FormEditarUsuario.vue'),
+      meta: {keyAuth: true}
+    },
+    {
       path: '/agregarmateria/:id?',
       name: 'agregarmateria',
       component: () => import('../components/FormAgregarMaterias.vue'),
       meta: {keyAuth: true}
     },
     {
-      path: '/editarMateria/:id?/:trimestre?/:nombre?',
+      path: '/editarmateria/:id?/:trimestre?/:nombre?',
       name: 'editarmateria',
       component: () => import('../components/FormEditarMaterias.vue'),
       meta: {keyAuth: false}
@@ -49,13 +55,19 @@ const router = createRouter({
       meta: {keyAuth: false}
     },
     {
+      path: '/listaractividades/:idmat?',
+      name: 'listaractividades',
+      component: () => import('../components/ActividadesDoc.vue'),
+      meta: {keyAuth: false}
+    },
+    {
       path: '/mostraractividad/:id?',
       name: 'mostraractividad',
       component: () => import('../components/FormActividadEst.vue'),
       meta: {keyAuth: false}
     },
     {
-      path: '/listaractividades/:idmat?',
+      path: '/listaractividades/:id?/:idmat?',
       name: 'listaractividades',
       component: () => import('../components/ActividadesDoc.vue'),
       meta: {keyAuth: false}
@@ -64,6 +76,12 @@ const router = createRouter({
       path: '/agregaractividades/:id?/:idmat?',
       name: 'agregaractividades',
       component: () => import('../components/FormActividades.vue'),
+      meta: {keyAuth: false}
+    },
+    {
+      path: '/editaractividades/:id?',
+      name: 'editaractividades',
+      component: () => import('../components/FormEditarActividades.vue'),
       meta: {keyAuth: false}
     }
   ]

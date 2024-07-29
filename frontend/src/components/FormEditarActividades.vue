@@ -3,7 +3,8 @@
 
     <div class="modal-mask">
         <div class="modal-container">
-            <h2>Cargar Actividad</h2>
+            <button @click="cerrar()" class="cerrar">X</button>
+            <h2>Editar Actividad</h2>
             <form @submit.prevent="enviar()" class="formulario">
                 <input  v-model="actividad.titulo"
                         name="titulo"
@@ -57,7 +58,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import axiosInstance from '../plugins/axios.js';
 import { useTokenStore } from '@/stores/userStore.js';
 const tokenStore = useTokenStore();
@@ -73,20 +74,45 @@ const actividad = reactive({
     "ponderacion": 0,
     "fecha": "",
     "hora": "",
-    "idmatuser": params.id,
-    "idmat": params.idmat
 });
 
-async function enviar(){
+async function cargar(){
   try {
-    const {data} = await axiosInstance.post('/actividades',actividad);
-    router.back();
+    const {data} = await axiosInstance.get(`/actividades/buscar/${params.id}`);
+    console.log("ACTIVIDAD A EDITAR..: ", data);
+    actividad.titulo = data.titulo;
+    actividad.mensaje = data.mensaje;
+    actividad.objetivos = data.objetivos;
+    actividad.participantes = data.participantes;
+    actividad.ponderacion = data.ponderacion;
+    actividad.fecha = data.fecha;
+    actividad.hora = data.hora;
     return;
   } catch (error) {
     console.log(error);
     return;
   }
 }
+
+onMounted(() => {
+    cargar();
+});
+
+async function enviar() {
+    try {
+        const { data } = await axiosInstance.patch(`/actividades/${params.id}`, actividad);
+        router.back();
+        return;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+}
+
+const cerrar = (()=>{
+    router.back();
+})
+
 
 </script>
 
@@ -113,6 +139,16 @@ async function enviar(){
     transition: opacity 0.3s ease;
 }
 
+.cerrar {
+    margin-left: 90%;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    border: none;
+    border-radius: 50%;
+}
+
+
 .modal-container {
     width: 350px;
     margin: auto;
@@ -128,7 +164,7 @@ async function enviar(){
 }
 
 h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: bold;
 }
 

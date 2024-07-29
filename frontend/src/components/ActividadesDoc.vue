@@ -14,7 +14,7 @@
                 <tr v-for="actividad in actividades" :key="actividad._id">
                     <td>{{ actividad.titulo }}</td>
                     <td>
-                        <span @click="editar()" class="icono">
+                        <span @click="editar(actividad)" class="icono">
                             📋
                         </span>
                         <span @click="eliminar(actividad)" class="icono">
@@ -52,10 +52,8 @@ const agregar = () => {
 }
 
 
-const editar = () => {
-    //console.log("Trimestre...:",trimestre);
-    //router.push(`editarmateria/${_id}`)
-    //router.push({ name: "editarmateria", params:{id:_id, trimestre: trimestre, nombre: nombre }});
+const editar = ({_id}) => {
+    router.push({ name: "editaractividades", params:{id:_id}});
 }
 
 

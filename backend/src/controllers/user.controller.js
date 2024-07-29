@@ -21,6 +21,18 @@ export const getUser = async (req, res) => {
     }
   };
 
+  export const getUserId = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const user = await User.findOne({ _id: id });
+      if (!user) return res.status(404).json({ message: "Usuario no Encontrado" });
+      return res.json(user);
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  };
+
+
 export const createUser = async (req, res) => {
   try {
     const { cedula, name, lastname, email, password ,rol} = req.body;
@@ -43,10 +55,10 @@ export const createUser = async (req, res) => {
 
 export const updateUser = async (req, res) => {
     try {
-      const { name, lastname, email } = req.body;
-      const UserUpdated = await User.findOneAndUpdate(
+      const { cedula, name, lastname, email } = req.body;
+      const userUpdated = await User.findOneAndUpdate(
         { _id: req.params.id },
-        { name, lastname, email },
+        { name, lastname, email, cedula },
         { new: true }
       );
       return res.json(userUpdated);

@@ -3,6 +3,7 @@
 
     <div class="modal-mask">
         <div class="modal-container">
+            <button @click="cerrar()" class="cerrar">X</button>
             <h2>Cargar Actividad</h2>
             <form @submit.prevent="enviar()" class="formulario">
                 <input  v-model="actividad.titulo"
@@ -77,9 +78,6 @@ const actividad = reactive({
     "idmat": params.idmat
 });
 
-console.log("ACTIVIDAD-IDMAT......:",actividad.idmat);
-console.log("ACTIVIDAD-IDMATUSER..:",actividad.idmatuser);
-
 async function enviar(){
   try {
     const {data} = await axiosInstance.post('/actividades',actividad);
@@ -90,6 +88,9 @@ async function enviar(){
     return;
   }
 }
+const cerrar = (()=>{
+    router.back();
+})
 
 </script>
 
@@ -114,6 +115,15 @@ async function enviar(){
 
     display: flex;
     transition: opacity 0.3s ease;
+}
+
+.cerrar {
+    margin-left: 90%;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    border: none;
+    border-radius: 50%;
 }
 
 .modal-container {
