@@ -41,7 +41,13 @@ const router = createRouter({
       name: 'editarmateria',
       component: () => import('../components/FormEditarMaterias.vue'),
       meta: {keyAuth: false}
-    }
+    },
+    {
+      path: '/listaractividades/:idmat?',
+      name: 'listaractividades',
+      component: () => import('../components/ActividadesDoc.vue'),
+      meta: {keyAuth: false}
+    },
   ]
 })
 
