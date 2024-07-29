@@ -43,6 +43,12 @@ const router = createRouter({
       meta: {keyAuth: false}
     },
     {
+      path: '/listaractividadesest/:idmat?',
+      name: 'listaractividadesest',
+      component: () => import('../components/ActividadesEst.vue'),
+      meta: {keyAuth: false}
+    },
+    {
       path: '/listaractividades/:idmat?',
       name: 'listaractividades',
       component: () => import('../components/ActividadesDoc.vue'),
