@@ -1,91 +1,80 @@
 <template>
-    <Transition name="actividad">
-
-    <div class="modal-mask">
-        <div class="modal-container">
-            <h2>Cargar Actividad</h2>
-            <form @submit.prevent="enviar()" class="formulario">
-                <input  v-model="actividad.titulo"
-                        name="titulo"
-                        type="text"
-                        placeholder="Titulo de la Actividad"
-                        class="form-control" 
-                />
-                <input  v-model="actividad.mensaje"
-                        name="mensaje"
-                        type="text"
-                        placeholder="Mensaje de la Actividad"
-                        class="form-control" 
-                />
-                <input  v-model="actividad.objetivos"
-                        name="objetivos"
-                        type="text"
-                        placeholder="Objetivos de la Actividad"
-                        class="form-control" 
-                />
-                <input  v-model="actividad.participantes"
-                        name="participantes"
-                        type="number"
-                        placeholder="Nro de Participantes"
-                        class="form-control" 
-                />
-                <input  v-model="actividad.ponderacion"
-                        name="ponderacion"
-                        type="number"
-                        placeholder="Ponderacion de la Actividad"
-                        class="form-control" 
-                />
-                <input  v-model="actividad.fecha"
-                        name="mensaje"
-                        type="text"
-                        placeholder="Fecha"
-                        class="form-control" 
-                />
-                <input  v-model="actividad.hora"
-                        name="mensaje"
-                        type="text"
-                        placeholder="Hora"
-                        class="form-control" 
-                />
-                <button class="boton">
-                    <span>Guardar Actividad</span>
-                </button>
-            </Form>
+    <div class="container">
+        <div class="actividad">
+            <h2 class="titulo">{{ actividad.titulo }}</h2>
+            <h3 class="mensaje">{{ actividad.mensaje }}</h3>
+            <div class="items">
+                <div class="item">
+                    <img src="../assets/objetivos.png" alt="">
+                    <p>{{ actividad.objetivos }}</p>
+                </div>
+                <div class="item">
+                    <img src="../assets/participantes.png" alt="">
+                    <p>Max. Nro de Participantes {{ actividad.participantes }}</p>
+                </div>
+                <div class="item">
+                    <img src="../assets/ponderacion.png" alt="">
+                    <p>Ponderación de: {{ actividad.ponderacion }} %</p>
+                </div>
+                <div class="item">
+                    <img src="../assets/fecha.png" alt="">
+                    <p> Fecha: {{ actividad.fecha }}</p>
+                </div>
+                <div class="item">
+                    <img src="../assets/hora.png" alt="">
+                    <p>Hora: {{ actividad.hora }}</p>
+                </div>
+            </div>
+            <button @click="regresar()" class="boton">
+                    <span>Regresar</span>
+            </button>
         </div>
     </div>
-</Transition>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import axiosInstance from '../plugins/axios.js';
 import { useTokenStore } from '@/stores/userStore.js';
 const tokenStore = useTokenStore();
-import {useRoute, useRouter} from "vue-router";
-const {params} = useRoute();
+import { useRoute, useRouter } from "vue-router";
+const { params } = useRoute();
 const router = useRouter();
 
 const actividad = reactive({
-    "titulo":"",
+    "titulo": "",
     "mensaje": "",
     "objetivos": "",
     "participantes": 1,
     "ponderacion": 0,
     "fecha": "",
     "hora": "",
-    "idmatuser": params.id,
-    "idmat": params.idmat
 });
 
-async function enviar(){
-  try {
-    const {data} = await axiosInstance.post('/actividades',actividad);
+const cargar = async () => {
+    try {
+        const { data } = await axiosInstance.get(`/actividades/buscar/${params.id}`);
+        actividad.titulo = data.titulo;
+        actividad.mensaje = data.mensaje;
+        actividad.objetivos = data.objetivos;
+        actividad.participantes = data.participantes;
+        actividad.ponderacion = data.ponderacion;
+        actividad.fecha = data.fecha;
+        actividad.hora = data.hora;
+        return;
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+};
+
+onMounted(() => {
+    cargar();
+});
+
+
+function regresar() {
     router.back();
-    return;
-  } catch (error) {
-    console.log(error);
-    return;
-  }
 }
 
 </script>
@@ -93,72 +82,80 @@ async function enviar(){
 
 
 <style scoped>
-.modal-mask {
+.container {
     font-family: 'Arial Narrow Bold', sans-serif;
     position: fixed;
     z-index: 9998;
-    top: 0;
+    top: 40px;
     left: 0;
     width: 100%;
-    height: 100%;
-    background-color: rgba(184, 181, 181, 0.5);
-
-    background-image: url("../assets/Background.png");
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: cover;
-    overflow: hidden;
-
+    height: 100vh;
     display: flex;
+    justify-content: center;
     transition: opacity 0.3s ease;
 }
 
-.modal-container {
-    width: 350px;
-    margin: auto;
-    padding: 35px 15px;
-    background-color: #80B3FF;
-    border-radius: 25px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.actividad {
     align-items: center;
-}
-
-h2 {
-    font-size: 2.5rem;
-    font-weight: bold;
-}
-
-.formulario {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    box-shadow: 0px 2px 5px #888;
     display: flex;
     flex-direction: column;
+    margin-top: 10px;
+    padding: 0;
+    position: relative;
+    width: 400px;
+    height: 530px;
+}
+
+
+.titulo {
+    margin: 0;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    text-align: center;
     width: 100%;
-    gap: 20px;
-
-}
-
-.form-control {
-    padding: 12px;
-    border: none;
-    border-radius: 15px;
-}
-
-input::placeholder {
+    height: 20%;
+    padding: 8px;
+    background-color: #408CFF;
+    font-size: 1.4rem;
     font-weight: bold;
-    opacity: 0.6;
-    color: #000000;
+}
+
+.mensaje {
+    margin-top: 10px;
+    width: 100%;
+    padding: 8px;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+.items {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    gap: 10px;
+    padding: 20px;
+    width: 100%;
+}
+
+.item {
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    gap: 30px
 }
 
 .boton {
-    margin-top: 20px;
-    padding: 10px;
+    position: fixed;
+    top: 535px;
+    padding: 8px;
     border: none;
     border-radius: 8px;
     background-color: #003380;
     color: #FFFFFF;
-    font-size: 1.2rem
+    font-size: 1rem
 }
 </style>
