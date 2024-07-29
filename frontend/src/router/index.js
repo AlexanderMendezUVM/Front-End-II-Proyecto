@@ -25,6 +25,12 @@ const router = createRouter({
       meta: {keyAuth: true}
     },
     {
+      path: '/agregarmateria/:id?',
+      name: 'agregarmateria',
+      component: () => import('../components/FormAgregarMaterias.vue'),
+      meta: {keyAuth: true}
+    },
+    {
       path: '/editarMateria/:id?/:trimestre?/:nombre?',
       name: 'editarmateria',
       component: () => import('../components/FormEditarMaterias.vue'),
