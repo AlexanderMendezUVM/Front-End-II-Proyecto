@@ -54,6 +54,12 @@ const router = createRouter({
       component: () => import('../components/ActividadesDoc.vue'),
       meta: {keyAuth: false}
     },
+    {
+      path: '/agregaractividades/:id?/:idmat?',
+      name: 'agregaractividades',
+      component: () => import('../components/FormActividades.vue'),
+      meta: {keyAuth: false}
+    }
   ]
 })
 
