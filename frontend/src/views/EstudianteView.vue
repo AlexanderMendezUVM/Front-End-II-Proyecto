@@ -4,14 +4,14 @@
       <h3 class="rol">Usted ha iniciado como: {{ tokenStore.usuario.rol }}</h3>
     </div>
     <h2 class="rol">Tablon de Asignaturas Disponibles</h2>
-    <dir class="grilla">
+    <div class="grilla">
       <div v-for="(materia, index) in materias" :key="index">
         <div class="materia-item">
           <h3 class="materia-nombre">{{ materia.idmat.nombre }}</h3>
           <p class="materia-trimestre">TRIMESTRE: {{ materia.idmat.trimestre }}</p>
         </div>
       </div>
-    </dir>
+    </div>
   </div>
 </template>
   

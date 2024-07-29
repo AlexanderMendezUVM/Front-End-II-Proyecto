@@ -74,3 +74,4 @@ const eliminar = async ({ nombre, _id }) => {
   cursor: pointer;
 }
 </style>
+

@@ -4,39 +4,34 @@
             <h3 class="rol">Usted ha iniciado como: {{ tokenStore.usuario.rol }}</h3>
         </div>
         <div class="botones">
-            <button @click="ventana = 1">Materias</button>
-            <button @click="ventana = 2">Usuarios</button>
-            <button @click="ventana = 3">Asignación</button>
+            <button @click="opcion(1)" class="boton">Materias</button>
+            <button @click="opcion(2)" class="boton">Usuarios</button>
+            <button @click="opcion(3)" class="boton">Asignación</button>
         </div>
-        <div v-if="ventana == 1" class="contenido">
-            <div>
-                <button @click="ventana = 4">Agregar Materia</button>
-            </div>
+        <div v-if="tokenStore.ventana == 1" class="contenido">
             <Tabla/>
         </div>
-        <div v-if="ventana == 2" class="contenido">
-            USUARIOS
+        <div v-if="tokenStore.ventana == 2" class="contenido">
+            Usuarios
         </div>
-        <div v-if="ventana == 3" class="contenido">
+        <div v-if="tokenStore.ventana == 3" class="contenido">
             <AsignarMaterias/>
-        </div>
-        <div v-if="ventana == 4" class="contenido">
-            <FormAgregarMaterias/>
         </div>
 </div>
 </template>
 
 <script setup>
 import { ref, reactive } from 'vue';
-import axiosInstance from '../plugins/axios.js';
-import Tabla from '@/components/Tabla.vue';
-import FormAgregarMaterias from '@/components/FormAgregarMaterias.vue';
-import FormEditarMaterias from '@/components/FormEditarMaterias.vue';
+//import axiosInstance from '../plugins/axios.js';
+import Tabla from '@/components/Materias.vue';
 import AsignarMaterias from '@/components/AsignarMaterias.vue';
 import { useTokenStore } from '@/stores/userStore.js';
 const tokenStore = useTokenStore();
-const ventana = ref(1);
 
+const opcion=((valor) => {
+  console.log("VALOR..:",valor);
+  tokenStore.ventana=valor;
+})
 
 const selected = ref(1)
 
@@ -78,6 +73,25 @@ const options = ref([
     width: 100%;
     justify-content: center;
 }
+
+.boton{
+    padding: 5px;
+    margin: 0 50px;
+    border: none;
+    border-radius: 8px;
+    background-color: #80B3FF;
+    cursor: pointer;
+}
+
+.botonagregar{
+    padding: 5px;
+    margin: 10px 50px;
+    border: none;
+    border-radius: 8px;
+    background-color: #91da74;
+    cursor: pointer;
+}
+
 
 .contenido {
     display: flex;
