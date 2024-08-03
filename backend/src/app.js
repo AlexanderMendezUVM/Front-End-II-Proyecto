@@ -4,7 +4,6 @@ import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
-//import estRoutes from "./routes/est.routes.js";
 import matRoutes from "./routes/mat.routes.js";
 import matUserRoutes from "./routes/matUser.routes.js";
 import actividadRoutes from "./routes/actividad.routes.js";
